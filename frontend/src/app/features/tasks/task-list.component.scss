@@ -45,6 +45,32 @@ h2 {
   box-shadow: var(--shadow);
 }
 
+.create-panel {
+  margin-bottom: 1.25rem;
+}
+
+.new-task-toggle {
+  width: 100%;
+  border: 1px solid #2f9e44;
+  background: #37b24d;
+  color: #ffffff;
+  padding: 0.7rem 1rem;
+  font-weight: 700;
+}
+
+.new-task-toggle:hover {
+  background: #2f9e44;
+}
+
+.new-task-toggle:focus-visible {
+  outline: 2px solid #9be9a8;
+  outline-offset: 2px;
+}
+
+.create-panel .form-panel {
+  margin-top: 1.25rem;
+}
+
 .form-panel .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -78,6 +104,7 @@ select {
   background: var(--bg);
   color: var(--text);
   font: inherit;
+  font-size: 16px;
 }
 
 .actions {
@@ -87,12 +114,47 @@ select {
   margin-top: 1rem;
 }
 
+.form-panel .actions {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.form-panel .actions button {
+  width: 100%;
+}
+
 .list-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 1rem;
+}
+
+.list-head-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.list-head-actions .ghost.small {
+  padding: 0.5rem 0.65rem;
+  color: #5f7288;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .list-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .list-head-actions {
+    width: 100%;
+  }
+
+  .list-head-actions .ghost {
+    flex: 1;
+  }
 }
 
 .task-grid {
@@ -154,8 +216,42 @@ select {
 
 .task-actions {
   display: flex;
+  flex-direction: column;
   flex-shrink: 0;
+  gap: 0.5rem;
+  align-items: stretch;
+  min-width: 7.5rem;
+}
+
+.task-actions-top .done {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  min-height: 2.5rem;
+}
+
+.task-actions-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0.35rem;
+}
+
+.task-actions-bottom button {
+  width: 100%;
+}
+
+.history-block {
+  border-top: 1px solid var(--border);
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.history-block h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.task-card-done {
+  opacity: 0.88;
 }
 
 button {
@@ -193,6 +289,17 @@ button {
   border: 1px solid rgba(220, 53, 69, 0.45);
   background: rgba(220, 53, 69, 0.12);
   color: #f8a1ad;
+}
+
+.done {
+  border: 1px solid rgba(55, 178, 77, 0.55);
+  background: rgba(55, 178, 77, 0.2);
+  color: #c8f5d1;
+  font-weight: 600;
+}
+
+.done:disabled {
+  opacity: 0.5;
 }
 
 .danger:disabled {

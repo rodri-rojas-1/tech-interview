@@ -4,11 +4,17 @@ import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AUTH_TOKEN_KEY, readStoredToken } from '../constants/auth-storage';
+import { bearerAuthOptions } from '../http/bearer-options';
 import type {
   AuthResponse,
   CurrentUserResponse,
   LoginRequest,
 } from '../models/api.models';
+
+function pickAccessToken(response: AuthResponse & { Token?: string }): string {
+  const raw = response.token ?? response.Token;
+  return typeof raw === 'string' ? raw.trim() : '';
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -26,18 +32,30 @@ export class AuthService {
 
   login(body: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(this.api('/api/auth/login'), body).pipe(
-      tap((r) => this.persistToken(r.token)),
+      tap((r) => {
+        const access = pickAccessToken(r);
+        if (access) {
+          this.persistToken(access);
+        }
+      }),
     );
   }
 
   register(body: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(this.api('/api/auth/register'), body).pipe(
-      tap((r) => this.persistToken(r.token)),
+      tap((r) => {
+        const access = pickAccessToken(r);
+        if (access) {
+          this.persistToken(access);
+        }
+      }),
     );
   }
 
   me(): Observable<CurrentUserResponse> {
-    return this.http.get<CurrentUserResponse>(this.api('/api/auth/me'));
+    return this.http.get<CurrentUserResponse>(this.api('/api/auth/me'), {
+      ...bearerAuthOptions(),
+    });
   }
 
   logout(): void {
@@ -47,7 +65,11 @@ export class AuthService {
   }
 
   private persistToken(t: string): void {
-    localStorage.setItem(AUTH_TOKEN_KEY, t);
-    this.token.set(t);
+    const v = t.trim();
+    if (!v) {
+      return;
+    }
+    localStorage.setItem(AUTH_TOKEN_KEY, v);
+    this.token.set(v);
   }
 }

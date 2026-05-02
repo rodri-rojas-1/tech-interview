@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -10,6 +10,7 @@ import type {
   TaskDto,
   TaskItemStatus,
 } from '../../core/models/api.models';
+import { TaskStatusLabelPipe } from '../../core/pipes/task-status-label.pipe';
 import { AuthService } from '../../core/services/auth.service';
 import { TaskService } from '../../core/services/task.service';
 
@@ -18,7 +19,7 @@ const STATUSES: TaskItemStatus[] = ['Todo', 'InProgress', 'Done'];
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePipe],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, TaskStatusLabelPipe],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
 })
@@ -33,8 +34,16 @@ export class TaskListComponent implements OnInit {
   readonly error = signal<string | null>(null);
   readonly busy = signal(false);
   readonly editingId = signal<string | null>(null);
+  readonly formExpanded = signal(false);
+  readonly showHistory = signal(false);
 
   readonly statuses = STATUSES;
+  readonly activeTasks = computed(() =>
+    this.tasks().filter((task) => task.status !== 'Done'),
+  );
+  readonly completedTasks = computed(() =>
+    this.tasks().filter((task) => task.status === 'Done'),
+  );
 
   readonly form = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(500)]],
@@ -67,6 +76,7 @@ export class TaskListComponent implements OnInit {
   }
 
   startCreate(): void {
+    this.formExpanded.set(true);
     this.editingId.set(null);
     this.form.reset({
       title: '',
@@ -77,6 +87,7 @@ export class TaskListComponent implements OnInit {
   }
 
   startEdit(t: TaskDto): void {
+    this.formExpanded.set(true);
     this.editingId.set(t.id);
     this.form.setValue({
       title: t.title,
@@ -88,7 +99,25 @@ export class TaskListComponent implements OnInit {
 
   cancelEdit(): void {
     this.editingId.set(null);
+    this.formExpanded.set(false);
+    this.form.reset({
+      title: '',
+      description: '',
+      status: 'Todo',
+      dueLocal: '',
+    });
+  }
+
+  toggleCreatePanel(): void {
+    if (this.formExpanded()) {
+      this.cancelEdit();
+      return;
+    }
     this.startCreate();
+  }
+
+  toggleHistory(): void {
+    this.showHistory.update((value) => !value);
   }
 
   save(): void {
@@ -164,6 +193,31 @@ export class TaskListComponent implements OnInit {
         this.error.set(this.formatHttpError(err));
       },
     });
+  }
+
+  markDone(t: TaskDto): void {
+    if (t.status === 'Done' || this.busy()) {
+      return;
+    }
+    this.busy.set(true);
+    this.error.set(null);
+    this.tasksApi
+      .update(t.id, {
+        title: t.title,
+        description: t.description,
+        status: 'Done',
+        dueDateUtc: t.dueDateUtc,
+      })
+      .subscribe({
+        next: () => {
+          this.busy.set(false);
+          this.refresh();
+        },
+        error: (err: unknown) => {
+          this.busy.set(false);
+          this.error.set(this.formatHttpError(err));
+        },
+      });
   }
 
   logout(): void {

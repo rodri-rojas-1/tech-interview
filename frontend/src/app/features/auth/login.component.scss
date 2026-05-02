@@ -41,6 +41,8 @@ h1 {
   color: var(--text);
   cursor: pointer;
   font: inherit;
+  font-size: 16px;
+  touch-action: manipulation;
 }
 
 .tab.active {
@@ -69,6 +71,7 @@ input {
   background: var(--bg);
   color: var(--text);
   font: inherit;
+  font-size: 16px;
 }
 
 .field-error {
@@ -94,6 +97,8 @@ input {
   color: #0b1020;
   font-weight: 600;
   cursor: pointer;
+  font-size: 16px;
+  touch-action: manipulation;
 }
 
 .primary:disabled {

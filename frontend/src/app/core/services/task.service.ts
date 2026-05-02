@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { bearerAuthOptions } from '../http/bearer-options';
 import type {
   CreateTaskRequest,
   TaskDto,
@@ -18,22 +19,32 @@ export class TaskService {
   }
 
   list(): Observable<TaskDto[]> {
-    return this.http.get<TaskDto[]>(this.api('/api/tasks'));
+    return this.http.get<TaskDto[]>(this.api('/api/tasks'), {
+      ...bearerAuthOptions(),
+    });
   }
 
   get(id: string): Observable<TaskDto> {
-    return this.http.get<TaskDto>(this.api(`/api/tasks/${id}`));
+    return this.http.get<TaskDto>(this.api(`/api/tasks/${id}`), {
+      ...bearerAuthOptions(),
+    });
   }
 
   create(body: CreateTaskRequest): Observable<TaskDto> {
-    return this.http.post<TaskDto>(this.api('/api/tasks'), body);
+    return this.http.post<TaskDto>(this.api('/api/tasks'), body, {
+      ...bearerAuthOptions(),
+    });
   }
 
   update(id: string, body: UpdateTaskRequest): Observable<TaskDto> {
-    return this.http.put<TaskDto>(this.api(`/api/tasks/${id}`), body);
+    return this.http.put<TaskDto>(this.api(`/api/tasks/${id}`), body, {
+      ...bearerAuthOptions(),
+    });
   }
 
   delete(id: string): Observable<void> {
-    return this.http.delete<void>(this.api(`/api/tasks/${id}`));
+    return this.http.delete<void>(this.api(`/api/tasks/${id}`), {
+      ...bearerAuthOptions(),
+    });
   }
 }
