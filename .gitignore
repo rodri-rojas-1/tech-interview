@@ -1,0 +1,85 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE / editors
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.GhostDoc.xml
+*.DotSettings.user
+
+# VS Code / Cursor (keep shared settings if you use .vscode/tasks; ignore local only if needed)
+# Uncomment if you do not want to commit launch.json:
+# .vscode/
+
+# Build outputs
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+*.cache
+project.lock.json
+project.fragment.lock.json
+artifacts/
+**/TestResults/
+**/coverage/
+*.coverage
+*.coveragexml
+
+# NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# .NET tooling
+.dotnet/
+*.DotnetTools/
+
+# ASP.NET
+*.Publish.xml
+*.pubxml
+*.publishproj
+App_Data/*.mdf
+App_Data/*.ldf
+
+# Secrets and local-only config (never commit real secrets)
+*.pfx
+*.p12
+secrets.json
+**/appsettings.*.local.json
+**/appsettings.Local.json
+
+# Node / frontend (Angular, etc.)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-store/
+dist/
+.angular/
+*.tsbuildinfo
+
+# Claude Code (local-only overrides; keep CLAUDE.md committed)
+CLAUDE.local.md
+
+# Misc
+*.tmp
+*.temp
+*.swp
+*~
