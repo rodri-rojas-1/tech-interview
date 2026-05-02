@@ -26,6 +26,21 @@ public sealed class AuthControllerTests
     }
 
     [Fact]
+    public async Task Login_calls_service_and_returns_ok()
+    {
+        var auth = new Mock<IAuthService>();
+        var expected = new AuthResponse("tok-login", Guid.NewGuid(), "a@b.com");
+        auth.Setup(x => x.LoginAsync(It.IsAny<LoginRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var sut = new AuthController(auth.Object);
+        var result = await sut.Login(new LoginRequest("a@b.com", "password12"), CancellationToken.None);
+
+        var ok = Assert.IsType<OkObjectResult>(result.Result);
+        Assert.Same(expected, ok.Value);
+    }
+
+    [Fact]
     public void Me_with_valid_claims_returns_current_user()
     {
         var auth = new Mock<IAuthService>();
@@ -59,6 +74,27 @@ public sealed class AuthControllerTests
 
         var result = sut.Me();
 
+        Assert.IsType<UnauthorizedResult>(result.Result);
+    }
+
+    [Fact]
+    public void Me_with_invalid_guid_returns_unauthorized()
+    {
+        var auth = new Mock<IAuthService>();
+        var sut = new AuthController(auth.Object);
+        var identity = new ClaimsIdentity(
+            new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, "not-a-guid"),
+                new Claim(ClaimTypes.Email, "x@y.com"),
+            },
+            "Test");
+        sut.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = new ClaimsPrincipal(identity) },
+        };
+
+        var result = sut.Me();
         Assert.IsType<UnauthorizedResult>(result.Result);
     }
 

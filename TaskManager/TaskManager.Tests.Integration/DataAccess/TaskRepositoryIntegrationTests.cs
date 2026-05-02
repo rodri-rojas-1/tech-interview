@@ -23,10 +23,11 @@ public sealed class TaskRepositoryIntegrationTests
         using var scope = _fixture.Factory!.Services.CreateScope();
         var users = scope.ServiceProvider.GetRequiredService<IUserRepository>();
         var tasks = scope.ServiceProvider.GetRequiredService<ITaskRepository>();
+        var email = $"task-repo-{Guid.NewGuid():N}@local";
 
         var user = new User(
             Guid.NewGuid(),
-            "task-repo@local",
+            email,
             "hash",
             DateTime.UtcNow);
         await users.AddAsync(user, CancellationToken.None);

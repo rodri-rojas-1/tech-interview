@@ -97,6 +97,31 @@ public sealed class TasksControllerTests
     }
 
     [Fact]
+    public async Task Update_returns_ok()
+    {
+        var taskId = Guid.NewGuid();
+        var req = new UpdateTaskRequest("Updated", "Desc", TaskItemStatus.InProgress, null);
+        var updated = new TaskDto(
+            taskId,
+            req.Title,
+            req.Description,
+            req.Status,
+            req.DueDateUtc,
+            DateTime.UtcNow,
+            DateTime.UtcNow);
+
+        var tasks = new Mock<ITaskService>();
+        tasks.Setup(x => x.UpdateAsync(UserId, taskId, req, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(updated);
+
+        var sut = CreateController(tasks.Object);
+        var result = await sut.Update(taskId, req, CancellationToken.None);
+
+        var ok = Assert.IsType<OkObjectResult>(result.Result);
+        Assert.Same(updated, ok.Value);
+    }
+
+    [Fact]
     public async Task List_without_user_claim_throws_unauthorized_app_exception()
     {
         var tasks = new Mock<ITaskService>();
@@ -108,6 +133,21 @@ public sealed class TasksControllerTests
 
         await Assert.ThrowsAsync<UnauthorizedAppException>(() =>
             sut.List(CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task Get_without_user_claim_throws_unauthorized_app_exception()
+    {
+        var sut = new TasksController(Mock.Of<ITaskService>())
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext { User = new ClaimsPrincipal() },
+            },
+        };
+
+        await Assert.ThrowsAsync<UnauthorizedAppException>(() =>
+            sut.Get(Guid.NewGuid(), CancellationToken.None));
     }
 
     private static TasksController CreateController(ITaskService svc)

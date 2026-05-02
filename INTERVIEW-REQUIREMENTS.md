@@ -16,15 +16,15 @@ This document maps requested interview requirements to how they were interpreted
 | Frontend | Angular 19 SPA | `frontend/src/app` |
 | Security | Password hashing (BCrypt) + JWT token issuance/validation | `TaskManager.Infrastructure/Security`, `TaskManager.API/Program.cs` |
 | Tests | xUnit unit tests + integration tests (public API, DB/repository, authenticated HTTP flow) | `TaskManager.Tests.Unit`, `TaskManager.Tests.Integration` |
+| Code coverage | +50% considering unit + integration test execution | `TaskManager.Tests.Unit`, `TaskManager.Tests.Integration`, coverage reports |
 | Demo readiness | Seed user + local run instructions for backend/frontend | `README.md`, `TaskManager.Infrastructure/Database/DemoDataSeeder.cs` |
 | User story | Own Markdown file | **`docs/user-story.md`** |
 | GenAI deliverable | Own Markdown file with validation/corrections/talking points | **`docs/genai-deliverable.md`** |
 | Other: No EF / Dapper / MediatR | Data access implemented with Npgsql + ADO.NET only | `TaskManager.Infrastructure`, `TaskManager/README.md` |
 | Other: No console warnings | Frontend/build adjusted to run clean without warnings in normal flow | `frontend/`, `README.md` |
-| Other: Code quality | Clean structure, validation, exception middleware, and test coverage | `TaskManager.Application`, `TaskManager.API/Middleware`, `TaskManager.Tests.*` |
+| Other: Code quality | Clean structure, validation, and exception middleware | `TaskManager.Application`, `TaskManager.API/Middleware` |
 
 ## Notes for interviewer
 
-- Status values are API-facing (`Todo`, `InProgress`, `Done`) and user-facing labels in UI are formatted (`To Do`, `In Progress`, `Done`).
-- Integration tests that require PostgreSQL run with Docker/Testcontainers or `TASKMANAGER_INTEGRATION_CONNECTION_STRING`; otherwise they are skipped by design.
-- Frontend dev proxy is configured to avoid browser auth header loss on redirects (proxy to API HTTPS).
+- Status values are API-facing (`Todo`, `InProgress`, `Done`) and user-facing labels in UI are formatted (`To Do`, `In Progress`, `Done`). Not the best approach, but it's a trade-off between simplicity and flexibility.
+- Integration tests that require PostgreSQL resolve DB in this order: `appsettings.Testing.json`, `TASKMANAGER_INTEGRATION_CONNECTION_STRING`, Docker/Testcontainers; if none is available, they are skipped by design. This approach could be confusing but I wanted to be as flexible as possible.

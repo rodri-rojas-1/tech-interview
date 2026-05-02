@@ -36,6 +36,10 @@ tech-interview/
 
 2. Set `ConnectionStrings:Default` in `TaskManager/TaskManager.API/appsettings.json` to match your PostgreSQL user/password.
 
+   For this demo repository, the default local sample uses:
+   - user: `postgres`
+   - password: `asdasd1`
+
 On startup (any environment other than `Testing`), the API creates the `users` and `tasks` tables and runs the seed.
 
 ## Demo credentials (seed)
@@ -69,16 +73,16 @@ HTTPS dev URL is printed in the console. CORS allows `http(s)://localhost:4200` 
 
 ## Tests
 
-```bash
-cd TaskManager
-dotnet test TaskManager.slnx
-```
-
 - **Unit tests** cover application services, validators, and **API controllers** (mocked dependencies).
 - **Integration (no DB)**: `GET /api/public/info` with environment `Testing` (no PostgreSQL).
-- **Integration (PostgreSQL)** — repository and HTTP CRUD tests run when **either**:
-  - **Docker** is running (Testcontainers starts PostgreSQL), or  
-  - you set **`TASKMANAGER_INTEGRATION_CONNECTION_STRING`** to a real Postgres connection string (e.g. a dedicated `taskmanager_test` database).
+- **Integration (PostgreSQL)** — repository and HTTP CRUD tests resolve DB in this order:
+  1. `TaskManager/TaskManager.API/appsettings.Testing.json` (demo-friendly local setup),
+  2. `TASKMANAGER_INTEGRATION_CONNECTION_STRING` environment variable (recommended for CI),
+  3. Docker/Testcontainers (if Docker is available).
+
+  The bundled `appsettings.Testing.json` points to:
+  - host `localhost`, port `5432`, database `taskmanager_test`
+  - user `postgres`, password `asdasd1`
 
 If neither is available, those tests are **skipped** (not failed) so `dotnet test` still passes locally/CI.
 
@@ -87,10 +91,10 @@ If neither is available, those tests are **skipped** (not failed) so `dotnet tes
 ```bash
 cd frontend
 npm install
-npm start
+npm start # or: ng serve
 ```
 
-Uses `http://localhost:4200` and proxies `/api` to the backend (see `frontend/proxy.conf.json`). Start the API first; default proxy target is **`http://localhost:5256`**. Details: **`frontend/README.md`**.
+Uses `http://localhost:4200` and proxies `/api` to the backend (see `frontend/proxy.conf.json`). Start the API first; default proxy target is **`https://localhost:7165`**. Details: **`frontend/README.md`**.
 
 ## Full stack (typical dev)
 

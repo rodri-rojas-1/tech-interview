@@ -22,19 +22,20 @@ public sealed class UserRepositoryIntegrationTests
         Skip.If(_fixture.Factory is null, _fixture.SkipReason);
         using var scope = _fixture.Factory!.Services.CreateScope();
         var users = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+        var email = $"repo-test-{Guid.NewGuid():N}@local";
 
         var user = new User(
             Guid.NewGuid(),
-            "repo-test@local",
+            email,
             "hash",
             DateTime.UtcNow);
 
         await users.AddAsync(user, CancellationToken.None);
 
-        var loaded = await users.GetByEmailAsync("repo-test@local", CancellationToken.None);
+        var loaded = await users.GetByEmailAsync(email, CancellationToken.None);
 
         Assert.NotNull(loaded);
         Assert.Equal(user.Id, loaded.Id);
-        Assert.Equal("repo-test@local", loaded.Email);
+        Assert.Equal(email, loaded.Email);
     }
 }

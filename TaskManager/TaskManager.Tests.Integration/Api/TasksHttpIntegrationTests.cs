@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using TaskManager.Application.Contracts;
 using TaskManager.Domain;
 using TaskManager.Tests.Integration.Fixtures;
@@ -22,6 +23,7 @@ public sealed class TasksHttpIntegrationTests
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
+        Converters = { new JsonStringEnumConverter() },
     };
 
     [SkippableFact]
