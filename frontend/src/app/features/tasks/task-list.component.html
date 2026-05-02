@@ -1,0 +1,98 @@
+<div class="tasks-page">
+  <header class="top-bar">
+    <div>
+      <h1>Tasks</h1>
+      @if (userEmail()) {
+        <p class="muted">{{ userEmail() }}</p>
+      }
+    </div>
+    <button type="button" class="ghost" (click)="logout()">Log out</button>
+  </header>
+
+  @if (error()) {
+    <p class="banner-error">{{ error() }}</p>
+  }
+
+  <section class="panel form-panel" aria-labelledby="form-heading">
+    <h2 id="form-heading">{{ editingId() ? 'Edit task' : 'New task' }}</h2>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="grid">
+        <label class="full">
+          <span>Title</span>
+          <input type="text" formControlName="title" />
+        </label>
+        <label class="full">
+          <span>Description</span>
+          <textarea rows="2" formControlName="description"></textarea>
+        </label>
+        <label>
+          <span>Status</span>
+          <select formControlName="status">
+            @for (s of statuses; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          <span>Due (local)</span>
+          <input type="datetime-local" formControlName="dueLocal" />
+        </label>
+      </div>
+      <div class="actions">
+        <button type="submit" class="primary" [disabled]="busy()">
+          {{ editingId() ? 'Update' : 'Create' }}
+        </button>
+        @if (editingId()) {
+          <button type="button" class="ghost" (click)="cancelEdit()">
+            Cancel
+          </button>
+        }
+      </div>
+    </form>
+  </section>
+
+  <section class="panel" aria-labelledby="list-heading">
+    <div class="list-head">
+      <h2 id="list-heading">Your tasks</h2>
+      <button type="button" class="ghost small" (click)="refresh()">Refresh</button>
+    </div>
+
+    @if (loading()) {
+      <p class="muted">Loading…</p>
+    } @else if (tasks().length === 0) {
+      <p class="muted">No tasks yet. Create one above.</p>
+    } @else {
+      <ul class="task-grid">
+        @for (t of tasks(); track t.id) {
+          <li class="task-card">
+            <div class="task-main">
+              <h3>{{ t.title }}</h3>
+              @if (t.description) {
+                <p class="desc">{{ t.description }}</p>
+              }
+              <div class="meta">
+                <span class="pill">{{ t.status }}</span>
+                @if (t.dueDateUtc) {
+                  <span>Due {{ t.dueDateUtc | date : 'medium' }}</span>
+                }
+              </div>
+            </div>
+            <div class="task-actions">
+              <button type="button" class="ghost small" (click)="startEdit(t)">
+                Edit
+              </button>
+              <button
+                type="button"
+                class="danger small"
+                (click)="remove(t)"
+                [disabled]="busy()"
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</div>

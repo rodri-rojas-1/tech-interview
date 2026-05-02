@@ -8,8 +8,9 @@ namespace TaskManager.API.Controllers;
 [Route("api/[controller]")]
 public sealed class PublicController : ControllerBase
 {
+    [HttpGet("info")]
     [HttpGet("live")]
-    public IActionResult Live()
+    public IActionResult Info()
     {
         return Ok(new
         {

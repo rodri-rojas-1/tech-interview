@@ -4,7 +4,7 @@
 
 Technical interview solution: **TaskManager** — ASP.NET Core Web API, Clean Architecture, PostgreSQL via **Npgsql + ADO.NET** (no EF/Dapper/MediatR), JWT auth, task CRUD, xUnit tests.
 
-Main solution: `TaskManager/TaskManager.slnx`. SPA will live under **`frontend/`**.
+Main solution: `TaskManager/TaskManager.slnx`. Angular SPA: **`frontend/`** (`npm start`, proxy to API).
 
 ## AI prompts and skills
 
@@ -18,6 +18,8 @@ Primary backend scaffold prompt:
 - `AI/prompts/generate-taskmanager-backend.md`
 
 The human-facing overview stays in **`README.md`** at the repo root (next to this file).
+
+Interview **GenAI** notes (validation, corrections): **`docs/genai-deliverable.md`**.
 
 ## Conventions
 
