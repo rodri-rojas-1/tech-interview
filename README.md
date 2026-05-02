@@ -26,6 +26,7 @@ tech-interview/
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
 - Local [PostgreSQL](https://www.postgresql.org/) (default port `5432`)
 - [Node.js](https://nodejs.org/) LTS (for `frontend/`)
+- [Angular CLI](https://angular.dev/tools/cli) (or use `npm start`, which runs local `ng`)
 
 ## Database
 
