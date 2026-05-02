@@ -16,6 +16,7 @@ tech-interview/
 │   ├── README.md
 │   ├── prompts/              # reusable generation prompts
 │   └── skills/               # Claude skills / snippets
+├── docs/                     # interview/support docs (user story, GenAI deliverable)
 └── TaskManager/              # .NET solution
     └── TaskManager.slnx
 ```
