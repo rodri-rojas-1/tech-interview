@@ -2,13 +2,14 @@
 
 Backend **ASP.NET Core Web API** with **Clean Architecture**, data access via **Npgsql + ADO.NET** (no EF/Dapper/MediatR), **JWT** authentication, task CRUD, and demo seed data. **Angular** SPA under **`frontend/`** (login/register, task CRUD).
 
-**Claude Code** context: see **`CLAUDE.md`** at this same level. **AI prompts/skills**: **`AI/prompts/`**, **`AI/skills/`**. **GenAI interview deliverable** (validation, corrections, talking points): **`docs/genai-deliverable.md`**. **Informal user story** (for the presentation): **`docs/user-story.md`**.
+**Claude Code** context: see **`CLAUDE.md`** at this same level. **AI prompts/skills**: **`AI/prompts/`**, **`AI/skills/`**. **GenAI interview deliverable** (validation, corrections, talking points): **`docs/genai-deliverable.md`**. **Informal user story** (for the presentation): **`docs/user-story.md`**. **Interview requirements mapping** (requested vs implemented): **`INTERVIEW-REQUIREMENTS.md`**.
 
 ## Repository layout
 
 ```text
 tech-interview/
 ├── README.md                 # this file
+├── INTERVIEW-REQUIREMENTS.md # requirements checklist for interviewers
 ├── CLAUDE.md                 # Claude Code project instructions
 ├── frontend/                 # Angular SPA (npm start)
 ├── AI/
