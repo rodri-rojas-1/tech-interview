@@ -75,6 +75,12 @@ HTTPS dev URL is printed in the console. CORS allows `http(s)://localhost:4200` 
 
 - **Unit tests** cover application services, validators, and **API controllers** (mocked dependencies).
 - **Integration (no DB)**: `GET /api/public/info` with environment `Testing` (no PostgreSQL).
+- **Before running PostgreSQL integration tests**, create the test database:
+
+  ```sql
+  CREATE DATABASE taskmanager_test;
+  ```
+
 - **Integration (PostgreSQL)** — repository and HTTP CRUD tests resolve DB in this order:
   1. `TaskManager/TaskManager.API/appsettings.Testing.json` (demo-friendly local setup),
   2. `TASKMANAGER_INTEGRATION_CONNECTION_STRING` environment variable (recommended for CI),
